@@ -87,12 +87,18 @@ async function run() {
     });
 
     // Route to save a new user in the database.
-    app.post("/user", async (req, res) => {
+    app.post("/users", async (req, res) => {
       const addUser = req.body; 
       console.log(addUser); 
       const result = await userCollection.insertOne(addUser); 
       res.send(result);
     });
+
+    app.get('/users', async (req, res) => {
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+  })
 
     // Sends a ping command to MongoDB to verify the connection.
     await client.db("admin").command({ ping: 1 });
