@@ -88,21 +88,30 @@ async function run() {
 
     // Route to save a new user in the database.
     app.post("/users", async (req, res) => {
-      const addUser = req.body; 
-      console.log(addUser); 
-      const result = await userCollection.insertOne(addUser); 
+      const addUser = req.body;
+      console.log(addUser);
+      const result = await userCollection.insertOne(addUser);
       res.send(result);
     });
 
-    app.get('/users', async (req, res) => {
+    app.get("/users", async (req, res) => {
       const cursor = userCollection.find();
       const result = await cursor.toArray();
       res.send(result);
-  })
+    });
+
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
 
     // Sends a ping command to MongoDB to verify the connection.
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures the client will close after operations (optional, depending on context).
     // await client.close();
@@ -122,10 +131,8 @@ app.listen(port, () => {
   console.log(`coffee server port is: ${port}`); // Logs the port for debugging.
 });
 
-
-
-
-{/**
+{
+  /**
                  How it works:
 
 Server Setup:
@@ -157,4 +164,5 @@ Logs key actions for debugging purposes.
 
 
 
-  */}
+  */
+}
